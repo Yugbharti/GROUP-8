@@ -4,7 +4,8 @@
 #include <string>
 using namespace std;
 
-// Authentication system
+// Function to authenticate the user
+// @return true if authentication is successful; otherwise false
 bool authenticate() {
     string username, password;
     cout << "Enter username: ";
@@ -20,17 +21,20 @@ bool authenticate() {
     }
 }
 
-// Enhanced Patient Class
+// Enhanced Patient Class to manage patient details
 class Patient {
 public:
-    string name;
-    int age;
-    string disease;
+    string name;        // Patient's name
+    int age;           // Patient's age
+    string disease;    // Patient's disease
 
     // Default constructor
     Patient() {}
 
-    // Parameterized constructor
+    // Parameterized constructor to initialize a Patient object
+    // @param n Name of the patient
+    // @param a Age of the patient
+    // @param d Disease of the patient
     Patient(string n, int a, string d) : name(n), age(a), disease(d) {}
 
     // Function to save patient information to a file
@@ -48,6 +52,7 @@ public:
     }
 
     // Static function to read patients from a file
+    // @return A vector of Patient objects read from the file
     static vector<Patient> readFromFile() {
         vector<Patient> patients;
         ifstream file("patients.txt");
@@ -71,7 +76,8 @@ public:
     }
 };
 
-// Function to manage patients
+// Function to manage patients (add/view)
+// Prompts the user to either add a new patient or view all patients
 void patientManagement() {
     int choice;
     cout << "1. Add new patient\n2. View all patients\nEnter choice: ";
@@ -104,13 +110,18 @@ void patientManagement() {
 // Class for Doctor Management
 class Doctor {
 public:
-    string name;
-    string specialization;
+    string name;            // Doctor's name
+    string specialization;  // Doctor's specialization
 
+    // Default constructor
     Doctor() {}
 
+    // Parameterized constructor to initialize a Doctor object
+    // @param n Name of the doctor
+    // @param s Specialization of the doctor
     Doctor(string n, string s) : name(n), specialization(s) {}
 
+    // Function to save doctor information to a file
     void saveToFile() {
         ofstream file("doctors.txt", ios::app);
         file << name << " " << specialization << "\n";
@@ -119,6 +130,7 @@ public:
 };
 
 // Function to manage doctors (Add only)
+// Allows the user to add a new doctor to the system
 void doctorManagement() {
     int choice;
     cout << "1. Add new doctor\nEnter choice: ";
@@ -142,14 +154,20 @@ void doctorManagement() {
 // Class for Appointment Scheduling
 class Appointment {
 public:
-    string patientName;
-    string doctorName;
-    string date;
+    string patientName;  // Name of the patient
+    string doctorName;   // Name of the doctor
+    string date;         // Appointment date
 
+    // Default constructor
     Appointment() {}
 
+    // Parameterized constructor to initialize an Appointment object
+    // @param pName Name of the patient
+    // @param dName Name of the doctor
+    // @param d Date of the appointment
     Appointment(string pName, string dName, string d) : patientName(pName), doctorName(dName), date(d) {}
 
+    // Function to save appointment information to a file
     void saveToFile() {
         ofstream file("appointments.txt", ios::app);
         file << patientName << " " << doctorName << " " << date << "\n";
@@ -158,6 +176,7 @@ public:
 };
 
 // Function to schedule appointments
+// Prompts the user for appointment details and saves them
 void appointmentScheduling() {
     string patientName, doctorName, date;
     cout << "Enter patient name: ";
@@ -175,13 +194,18 @@ void appointmentScheduling() {
 // Class for Billing System
 class Billing {
 public:
-    string patientName;
-    double amount;
+    string patientName;  // Name of the patient
+    double amount;       // Billing amount
 
+    // Default constructor
     Billing() {}
 
+    // Parameterized constructor to initialize a Billing object
+    // @param pName Name of the patient
+    // @param amt Amount to be billed
     Billing(string pName, double amt) : patientName(pName), amount(amt) {}
 
+    // Function to save billing information to a file
     void saveToFile() {
         ofstream file("billing.txt", ios::app);
         file << patientName << " " << amount << "\n";
@@ -190,6 +214,7 @@ public:
 };
 
 // Function to handle billing
+// Prompts the user for billing details and saves them
 void billingSystem() {
     string patientName;
     double amount;
@@ -204,6 +229,7 @@ void billingSystem() {
 }
 
 // Main function
+// The entry point of the program
 int main() {
     if (!authenticate()) {
         return 0; // Exit if authentication fails
@@ -217,24 +243,24 @@ int main() {
 
         switch (choice) {
             case 1:
-                patientManagement();
+                patientManagement(); // Manage patients
                 break;
             case 2:
-                doctorManagement();
+                doctorManagement();  // Manage doctors
                 break;
             case 3:
-                appointmentScheduling();
+                appointmentScheduling(); // Schedule appointments
                 break;
             case 4:
-                billingSystem();
+                billingSystem(); // Handle billing
                 break;
             case 5:
-                cout << "Exiting the system...\n";
+                cout << "Exiting the system...\n"; // Exit the program
                 break;
             default:
-                cout << "Invalid choice!\n";
+                cout << "Invalid choice!\n"; // Handle invalid input
         }
     } while (choice != 5);
 
-    return 0;
+    return 0; // End of the program
 }
