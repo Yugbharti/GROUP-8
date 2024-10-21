@@ -4,8 +4,11 @@
 #include <string>
 using namespace std;
 
-// Function to authenticate the user
-// @return true if authentication is successful; otherwise false
+// Authentication system
+/**
+ * @brief Prompts the user for a username and password, and authenticates the user.
+ * @return true if the credentials are correct, otherwise false.
+ */
 bool authenticate() {
     string username, password;
     cout << "Enter username: ";
@@ -21,23 +24,32 @@ bool authenticate() {
     }
 }
 
-// Enhanced Patient Class to manage patient details
+// Enhanced Patient Class
+/**
+ * @class Patient
+ * @brief Represents a patient with attributes like name, age, and disease.
+ */
 class Patient {
 public:
-    string name;        // Patient's name
-    int age;           // Patient's age
-    string disease;    // Patient's disease
+    string name;
+    int age;
+    string disease;
 
     // Default constructor
     Patient() {}
 
-    // Parameterized constructor to initialize a Patient object
-    // @param n Name of the patient
-    // @param a Age of the patient
-    // @param d Disease of the patient
+    // Parameterized constructor
+    /**
+     * @brief Constructs a patient with given name, age, and disease.
+     * @param n The patient's name.
+     * @param a The patient's age.
+     * @param d The disease the patient has.
+     */
     Patient(string n, int a, string d) : name(n), age(a), disease(d) {}
 
-    // Function to save patient information to a file
+    /**
+     * @brief Saves patient information to a file.
+     */
     void saveToFile() const {
         ofstream file("patients.txt", ios::app);
         if (file) {
@@ -46,13 +58,17 @@ public:
         file.close();
     }
 
-    // Function to display patient information
+    /**
+     * @brief Displays patient information.
+     */
     void displayInfo() const {
         cout << "Name: " << name << "\nAge: " << age << "\nDisease: " << disease << "\n\n";
     }
 
-    // Static function to read patients from a file
-    // @return A vector of Patient objects read from the file
+    /**
+     * @brief Reads patient data from the file and returns a vector of patients.
+     * @return A vector of patients.
+     */
     static vector<Patient> readFromFile() {
         vector<Patient> patients;
         ifstream file("patients.txt");
@@ -76,8 +92,9 @@ public:
     }
 };
 
-// Function to manage patients (add/view)
-// Prompts the user to either add a new patient or view all patients
+/**
+ * @brief Manages patient-related tasks like adding new patients and viewing all patients.
+ */
 void patientManagement() {
     int choice;
     cout << "1. Add new patient\n2. View all patients\nEnter choice: ";
@@ -108,32 +125,73 @@ void patientManagement() {
 }
 
 // Class for Doctor Management
+/**
+ * @class Doctor
+ * @brief Represents a doctor with attributes like name and specialization.
+ */
 class Doctor {
 public:
-    string name;            // Doctor's name
-    string specialization;  // Doctor's specialization
+    string name;
+    string specialization;
 
-    // Default constructor
     Doctor() {}
 
-    // Parameterized constructor to initialize a Doctor object
-    // @param n Name of the doctor
-    // @param s Specialization of the doctor
+    // Parameterized constructor
+    /**
+     * @brief Constructs a doctor with given name and specialization.
+     * @param n The doctor's name.
+     * @param s The doctor's specialization.
+     */
     Doctor(string n, string s) : name(n), specialization(s) {}
 
-    // Function to save doctor information to a file
-    void saveToFile() {
+    /**
+     * @brief Saves doctor information to a file.
+     */
+    void saveToFile() const {
         ofstream file("doctors.txt", ios::app);
         file << name << " " << specialization << "\n";
         file.close();
     }
+
+    /**
+     * @brief Reads doctor data from the file and returns a vector of doctors.
+     * @return A vector of doctors.
+     */
+    static vector<Doctor> readFromFile() {
+        vector<Doctor> doctors;
+        ifstream file("doctors.txt");
+        if (!file) {
+            cout << "Error opening file 'doctors.txt'. Please ensure the file exists.\n";
+            return doctors;
+        }
+
+        string name, specialization;
+        while (file >> name >> specialization) {
+            doctors.emplace_back(name, specialization);
+        }
+
+        if (doctors.empty()) {
+            cout << "No doctors found in the file.\n";
+        }
+
+        file.close();
+        return doctors;
+    }
+
+    /**
+     * @brief Displays doctor information.
+     */
+    void displayInfo() const {
+        cout << "Doctor Name: " << name << "\nSpecialization: " << specialization << "\n\n";
+    }
 };
 
-// Function to manage doctors (Add only)
-// Allows the user to add a new doctor to the system
+/**
+ * @brief Manages doctor-related tasks like adding new doctors and viewing all doctors.
+ */
 void doctorManagement() {
     int choice;
-    cout << "1. Add new doctor\nEnter choice: ";
+    cout << "1. Add new doctor\n2. View all doctors\nEnter choice: ";
     cin >> choice;
 
     if (choice == 1) {
@@ -146,90 +204,204 @@ void doctorManagement() {
         Doctor d(name, specialization);
         d.saveToFile();
         cout << "Doctor added successfully!\n";
+    } else if (choice == 2) {
+        cout << "\n--- List of Doctors ---\n";
+        vector<Doctor> doctors = Doctor::readFromFile();
+        for (const auto& d : doctors) {
+            d.displayInfo();
+        }
     } else {
         cout << "Invalid choice!\n";
     }
 }
 
 // Class for Appointment Scheduling
+/**
+ * @class Appointment
+ * @brief Represents an appointment with attributes like patient name, doctor name, and date.
+ */
 class Appointment {
 public:
-    string patientName;  // Name of the patient
-    string doctorName;   // Name of the doctor
-    string date;         // Appointment date
+    string patientName;
+    string doctorName;
+    string date;
 
-    // Default constructor
     Appointment() {}
 
-    // Parameterized constructor to initialize an Appointment object
-    // @param pName Name of the patient
-    // @param dName Name of the doctor
-    // @param d Date of the appointment
+    // Parameterized constructor
+    /**
+     * @brief Constructs an appointment with given patient name, doctor name, and date.
+     * @param pName The patient's name.
+     * @param dName The doctor's name.
+     * @param d The appointment date.
+     */
     Appointment(string pName, string dName, string d) : patientName(pName), doctorName(dName), date(d) {}
 
-    // Function to save appointment information to a file
-    void saveToFile() {
+    /**
+     * @brief Saves appointment information to a file.
+     */
+    void saveToFile() const {
         ofstream file("appointments.txt", ios::app);
-        file << patientName << " " << doctorName << " " << date << "\n";
+        if (file) {
+            file << patientName << " " << doctorName << " " << date << "\n";
+        }
         file.close();
+    }
+
+    /**
+     * @brief Reads appointment data from the file and returns a vector of appointments.
+     * @return A vector of appointments.
+     */
+    static vector<Appointment> readFromFile() {
+        vector<Appointment> appointments;
+        ifstream file("appointments.txt");
+        if (!file) {
+            cout << "Error opening file 'appointments.txt'. Please ensure the file exists.\n";
+            return appointments;
+        }
+
+        string patientName, doctorName, date;
+        while (file >> patientName >> doctorName >> date) {
+            appointments.emplace_back(patientName, doctorName, date);
+        }
+
+        if (appointments.empty()) {
+            cout << "No appointments found in the file.\n";
+        }
+
+        file.close();
+        return appointments;
+    }
+
+    /**
+     * @brief Displays appointment information.
+     */
+    void displayInfo() const {
+        cout << "Patient Name: " << patientName << "\nDoctor Name: " << doctorName << "\nAppointment Date: " << date << "\n\n";
     }
 };
 
-// Function to schedule appointments
-// Prompts the user for appointment details and saves them
+/**
+ * @brief Manages appointment-related tasks like scheduling new appointments and viewing all appointments.
+ */
 void appointmentScheduling() {
-    string patientName, doctorName, date;
-    cout << "Enter patient name: ";
-    cin >> patientName;
-    cout << "Enter doctor name: ";
-    cin >> doctorName;
-    cout << "Enter appointment date (DD/MM/YYYY): ";
-    cin >> date;
+    int choice;
+    cout << "1. Schedule new appointment\n2. View all appointments\nEnter choice: ";
+    cin >> choice;
 
-    Appointment app(patientName, doctorName, date);
-    app.saveToFile();
-    cout << "Appointment scheduled successfully!\n";
+    if (choice == 1) {
+        string patientName, doctorName, date;
+        cout << "Enter patient name: ";
+        cin >> patientName;
+        cout << "Enter doctor name: ";
+        cin >> doctorName;
+        cout << "Enter appointment date (DD/MM/YYYY): ";
+        cin >> date;
+
+        Appointment app(patientName, doctorName, date);
+        app.saveToFile();
+        cout << "Appointment scheduled successfully!\n";
+    } else if (choice == 2) {
+        cout << "\n--- List of Appointments ---\n";
+        vector<Appointment> appointments = Appointment::readFromFile();
+        for (const auto& app : appointments) {
+            app.displayInfo();
+        }
+    } else {
+        cout << "Invalid choice!\n";
+    }
 }
 
 // Class for Billing System
+/**
+ * @class Billing
+ * @brief Represents billing information with attributes like patient name and amount.
+ */
 class Billing {
 public:
-    string patientName;  // Name of the patient
-    double amount;       // Billing amount
+    string patientName;
+    double amount;
 
-    // Default constructor
     Billing() {}
 
-    // Parameterized constructor to initialize a Billing object
-    // @param pName Name of the patient
-    // @param amt Amount to be billed
     Billing(string pName, double amt) : patientName(pName), amount(amt) {}
 
-    // Function to save billing information to a file
-    void saveToFile() {
+    // Function to save bill to file
+    void saveToFile() const {
         ofstream file("billing.txt", ios::app);
-        file << patientName << " " << amount << "\n";
+        if (file) {
+            file << patientName << " " << amount << "\n";
+        }
         file.close();
+    }
+
+    // Static function to read bills from file
+    static vector<Billing> readFromFile() {
+        vector<Billing> bills;
+        ifstream file("billing.txt");
+        if (!file) {
+            cout << "Error opening file 'billing.txt'. Please ensure the file exists.\n";
+            return bills;
+        }
+
+        string patientName;
+        double amount;
+        while (file >> patientName >> amount) {
+            bills.emplace_back(patientName, amount);
+        }
+
+        if (bills.empty()) {
+            cout << "No billing records found in the file.\n";
+        }
+
+        file.close();
+        return bills;
+    }
+
+    // Function to display bill information
+    void displayInfo() const {
+        cout << "Patient Name: " << patientName << "\nBilling Amount: $" << amount << "\n\n";
     }
 };
 
-// Function to handle billing
-// Prompts the user for billing details and saves them
+// Function to handle billing (Add/View)
 void billingSystem() {
-    string patientName;
-    double amount;
-    cout << "Enter patient name: ";
-    cin >> patientName;
-    cout << "Enter billing amount: ";
-    cin >> amount;
+    int choice;
+    cout << "1. Add new billing record\n2. View all billing records\nEnter choice: ";
+    cin >> choice;
 
-    Billing bill(patientName, amount);
-    bill.saveToFile();
-    cout << "Billing processed successfully!\n";
+    if (choice == 1) {
+        string patientName;
+        double amount;
+        cout << "Enter patient name: ";
+        cin >> patientName;
+        cout << "Enter billing amount: ";
+        cin >> amount;
+
+        Billing bill(patientName, amount);
+        bill.saveToFile();
+        cout << "Billing record added successfully!\n";
+    } else if (choice == 2) {
+        cout << "\n--- List of Billing Records ---\n";
+        vector<Billing> bills = Billing::readFromFile();
+        for (const auto& bill : bills) {
+            bill.displayInfo();
+        }
+    } else {
+        cout << "Invalid choice!\n";
+    }
 }
-
-// Main function
-// The entry point of the program
+/**
+ * @brief Main function to manage the hospital system.
+ * 
+ * This function handles the hospital management system by providing options 
+ * for patient management, doctor management, appointment scheduling, 
+ * and the billing system. It first authenticates the user, and if successful,
+ * allows access to the respective modules. The user can choose between 
+ * different options in a loop and exit the system when done.
+ * 
+ * @return 0 if authentication fails or after exiting the system.
+ */
 int main() {
     if (!authenticate()) {
         return 0; // Exit if authentication fails
@@ -243,24 +415,42 @@ int main() {
 
         switch (choice) {
             case 1:
-                patientManagement(); // Manage patients
+                /**
+                 * @brief Calls the patientManagement function for adding/viewing patients.
+                 */
+                patientManagement();
                 break;
             case 2:
-                doctorManagement();  // Manage doctors
+                /**
+                 * @brief Calls the doctorManagement function for adding/viewing doctors.
+                 */
+                doctorManagement();
                 break;
             case 3:
-                appointmentScheduling(); // Schedule appointments
+                /**
+                 * @brief Calls the appointmentScheduling function for scheduling/viewing appointments.
+                 */
+                appointmentScheduling();
                 break;
             case 4:
-                billingSystem(); // Handle billing
+                /**
+                 * @brief Calls the billingSystem function for adding/viewing billing records.
+                 */
+                billingSystem();
                 break;
             case 5:
-                cout << "Exiting the system...\n"; // Exit the program
+                /**
+                 * @brief Exits the system.
+                 */
+                cout << "Exiting the system...\n";
                 break;
             default:
-                cout << "Invalid choice!\n"; // Handle invalid input
+                /**
+                 * @brief Displays an error message for invalid choices.
+                 */
+                cout << "Invalid choice!\n";
         }
     } while (choice != 5);
 
-    return 0; // End of the program
+    return 0;
 }
