@@ -13,4 +13,4 @@ COPY . .
 RUN g++ -o myapp main.cpp # Adjust according to your project structure
 
 # Command to run the application
-CMD ["./myapp"]
+CMD ["./Hospitalmanagementsystem"]
