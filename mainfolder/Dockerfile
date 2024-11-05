@@ -1,16 +1,17 @@
-# Use a base image with C++ development tools
+# Use the official GCC image to compile C++ programs
 FROM gcc:latest
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the source code into the container
+# Copy the C++ source code into the container
 COPY . .
 
-# Install any dependencies (if needed)
+# Install make (required to compile C++ code with Makefile, if needed)
+RUN apt-get update && apt-get install -y make
 
-# Compile the C++ source files
-RUN g++ -o myapp main.cpp # Adjust according to your project structure
+# Compile the C++ source code
+RUN g++ -o hospital_management_system SourceCode.cpp
 
-# Command to run the application
-CMD ["./Hospitalmanagementsystem"]
+# Set the default command to run the application
+CMD ["./hospital_management_system"]
